@@ -70,10 +70,13 @@ class TeacherServiceTest {
 
     @Test
     void testUpdateTeacher() {
-        when(teacherRepository.findById(1L)).thenReturn(Optional.of(teacher));
-        when(teacherMapper.toDTO(teacher)).thenReturn(teacherDTO);
 
         TeacherDTO updatedTeacherDTO = new TeacherDTO("Gabriel Luz", 50);
+
+        when(teacherRepository.findById(1L)).thenReturn(Optional.of(teacher));
+        when(teacherRepository.save(any(Teacher.class))).thenReturn(teacher);
+        when(teacherMapper.toDTO(teacher)).thenReturn(updatedTeacherDTO);
+
 
         TeacherDTO updatedTeacher = teacherService.updateTeacher(1L, updatedTeacherDTO);
 

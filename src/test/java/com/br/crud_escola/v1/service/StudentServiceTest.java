@@ -82,10 +82,13 @@ class StudentServiceTest {
 
     @Test
     void testUpdateStudent() {
-        when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
-        when(studentMapper.toDTO(student)).thenReturn(studentDTO);
 
         StudentDTO updatedStudentDTO = new StudentDTO("Gabriel", 21, "email@teste.com");
+
+        when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
+        when(studentRepository.save(any(Student.class))).thenReturn(student);
+        when(studentMapper.toDTO(student)).thenReturn(updatedStudentDTO);
+
 
         StudentDTO updatedStudent = studentService.updateStudent(1L, updatedStudentDTO);
 

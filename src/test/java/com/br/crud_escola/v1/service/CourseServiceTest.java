@@ -70,10 +70,12 @@ class CourseServiceTest {
 
     @Test
     void testUpdateCourse() {
-        when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
-        when(courseMapper.toDTO(course)).thenReturn(courseDTO);
-
         CourseDTO updatedCourseDTO = new CourseDTO("Math", "Updated Description", 50);
+
+        when(courseRepository.findById(1L)).thenReturn(Optional.of(course));
+        when(courseRepository.save(any(Course.class))).thenReturn(course);
+        when(courseMapper.toDTO(any(Course.class))).thenReturn(updatedCourseDTO);
+
 
         CourseDTO updatedCourse = courseService.updateCourse(1L, updatedCourseDTO);
 
