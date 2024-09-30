@@ -1,6 +1,8 @@
 package com.br.crud_escola.v1.service.impl;
 
 import com.br.crud_escola.domain.dto.StudentDTO;
+import com.br.crud_escola.domain.dto.StudentUpdateDTO;
+import com.br.crud_escola.domain.dto.response.StudentResponseDTO;
 import com.br.crud_escola.domain.mappers.StudentMapper;
 import com.br.crud_escola.domain.model.Student;
 import com.br.crud_escola.domain.repository.StudentRepository;
@@ -28,32 +30,28 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentDTO createStudent(StudentDTO studentDTO) {
+    public StudentResponseDTO createStudent(StudentDTO studentDTO) {
         if (studentRepository.findByEmail(studentDTO.email()).isPresent()) {
             throw new IllegalArgumentException("Email already exists!");
         }
         Student student = studentMapper.toEntity(studentDTO);
         studentRepository.save(student);
-        return studentMapper.toDTO(student);
+        return studentMapper.EntityToResponseDTO(student);
     }
 
     @Override
-    public StudentDTO updateStudent(Long id, StudentDTO studentDTO) {
+    public StudentResponseDTO updateStudent(Long id, StudentUpdateDTO studentDTO) {
         Student existingStudent = studentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Student not found"));
 
-        if (!existingStudent.getEmail().equals(studentDTO.email())) {
-            throw new IllegalArgumentException("Email cannot be changed");
-        }
-
-        existingStudent.setName(studentDTO.name());
-        existingStudent.setAge(studentDTO.age());
-        studentRepository.save(existingStudent);
-        return studentMapper.toDTO(existingStudent);
+        studentRepository.save(studentMapper.updateDTOToEntity(studentDTO));
+        return studentMapper.EntityToResponseDTO(existingStudent);
     }
 
     @Override
     public void deleteStudent(Long id) {
+        studentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Student not found"));
         studentRepository.deleteById(id);
     }
 

@@ -9,4 +9,5 @@ import java.util.List;
 @Builder
 public record StudentDTO(String name,
                          Integer age,
-                         String email) {}
+                         String email,
+                         Gender gender) {}

@@ -23,14 +23,6 @@ public class Course {
     private String description;
     private Integer workload;
 
-    @ManyToMany(mappedBy = "courses")
-    private List<Student> students;
-
     @ManyToMany
-    @JoinTable(
-            name = "course_teacher",
-            joinColumns = @JoinColumn(name = "course_id"),
-            inverseJoinColumns = @JoinColumn(name = "teacher_id")
-    )
     private List<Teacher> teachers;
 }

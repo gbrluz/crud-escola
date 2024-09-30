@@ -29,6 +29,6 @@ public class Student {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @ManyToMany
+    @OneToMany
     private List<Course> courses;
 }

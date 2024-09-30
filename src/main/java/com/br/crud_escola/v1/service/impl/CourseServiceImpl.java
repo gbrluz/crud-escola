@@ -1,6 +1,7 @@
 package com.br.crud_escola.v1.service.impl;
 
 import com.br.crud_escola.domain.dto.CourseDTO;
+import com.br.crud_escola.domain.dto.response.CourseResponseDTO;
 import com.br.crud_escola.domain.mappers.CourseMapper;
 import com.br.crud_escola.domain.model.Course;
 import com.br.crud_escola.domain.repository.CourseRepository;
@@ -29,14 +30,14 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CourseDTO createCourse(CourseDTO courseDTO) {
+    public CourseResponseDTO createCourse(CourseDTO courseDTO) {
         Course course = courseMapper.toEntity(courseDTO);
         courseRepository.save(course);
-        return courseMapper.toDTO(course);
+        return courseMapper.entityToResponseDTO(course);
     }
 
     @Override
-    public CourseDTO updateCourse(Long id, CourseDTO courseDTO) {
+    public CourseResponseDTO updateCourse(Long id, CourseDTO courseDTO) {
         Course existingCourse = courseRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Course not found"));
 
@@ -44,14 +45,14 @@ public class CourseServiceImpl implements CourseService {
             throw new IllegalArgumentException("Course name cannot be changed");
         }
 
-        existingCourse.setDescription(courseDTO.description());
-        existingCourse.setWorkload(courseDTO.workload());
-        courseRepository.save(existingCourse);
-        return courseMapper.toDTO(existingCourse);
+        courseRepository.save(courseMapper.toEntity(courseDTO));
+        return courseMapper.entityToResponseDTO(existingCourse);
     }
 
     @Override
     public void deleteCourse(Long id) {
+        courseRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Course not found"));
         courseRepository.deleteById(id);
     }
 }

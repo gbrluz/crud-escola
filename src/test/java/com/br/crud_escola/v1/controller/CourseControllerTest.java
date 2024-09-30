@@ -1,6 +1,7 @@
 package com.br.crud_escola.v1.controller;
 
 import com.br.crud_escola.domain.dto.CourseDTO;
+import com.br.crud_escola.domain.dto.response.CourseResponseDTO;
 import com.br.crud_escola.v1.service.CourseService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -30,9 +33,9 @@ public class CourseControllerTest {
 
     @Test
     public void givenValidCourseDTO_whenCreateCourse_thenReturnCreatedCourse() throws Exception {
-        CourseDTO courseDTO = new CourseDTO("Mathematics", "Basic Math", 60);
+        CourseResponseDTO courseDTO = new CourseResponseDTO(1L,"Mathematics", "Basic Math", 60, new ArrayList<>());
 
-        when(courseService.createCourse(courseDTO)).thenReturn(courseDTO);
+        when(courseService.createCourse(any())).thenReturn(courseDTO);
 
         mockMvc.perform(post("/api/courses")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -47,8 +50,10 @@ public class CourseControllerTest {
     public void givenValidIdAndCourseDTO_whenUpdateCourse_thenReturnUpdatedCourse() throws Exception {
         Long courseId = 1L;
         CourseDTO updatedCourseDTO = new CourseDTO("Mathematics", "Advanced Math", 120);
+        CourseResponseDTO courseDTO = new CourseResponseDTO(1L,"Mathematics", "Advanced Math", 120, new ArrayList<>());
 
-        when(courseService.updateCourse(courseId, updatedCourseDTO)).thenReturn(updatedCourseDTO);
+
+        when(courseService.updateCourse(courseId, updatedCourseDTO)).thenReturn(courseDTO);
 
         mockMvc.perform(put("/api/courses/{id}", courseId)
                         .contentType(MediaType.APPLICATION_JSON)

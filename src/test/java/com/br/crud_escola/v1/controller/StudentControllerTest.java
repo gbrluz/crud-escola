@@ -1,6 +1,9 @@
 package com.br.crud_escola.v1.controller;
 
 import com.br.crud_escola.domain.dto.StudentDTO;
+import com.br.crud_escola.domain.dto.StudentUpdateDTO;
+import com.br.crud_escola.domain.dto.response.StudentResponseDTO;
+import com.br.crud_escola.domain.enums.Gender;
 import com.br.crud_escola.v1.service.StudentService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -31,7 +34,7 @@ public class StudentControllerTest {
 
     @Test
     public void givenValidStudentDTO_whenCreateStudent_thenReturnCreatedStudent() throws Exception {
-        StudentDTO studentDTO = new StudentDTO("Gabriel", 20, "email@teste.com");
+        StudentResponseDTO studentDTO = new StudentResponseDTO(1L,"Gabriel", 20, "email@teste.com", Gender.MALE);
 
         when(studentService.createStudent(Mockito.any(StudentDTO.class))).thenReturn(studentDTO);
 
@@ -46,9 +49,9 @@ public class StudentControllerTest {
     @Test
     public void givenValidIdAndStudentDTO_whenUpdateStudent_thenReturnUpdatedStudent() throws Exception {
         Long studentId = 1L;
-        StudentDTO updatedStudentDTO = new StudentDTO("Gabriel", 22, "email@teste.com");
+        StudentResponseDTO studentDTO = new StudentResponseDTO(1L,"Gabriel", 20, "email@teste.com", Gender.MALE);
 
-        when(studentService.updateStudent(Mockito.eq(studentId), Mockito.any(StudentDTO.class))).thenReturn(updatedStudentDTO);
+        when(studentService.updateStudent(Mockito.eq(studentId), Mockito.any(StudentUpdateDTO.class))).thenReturn(studentDTO);
 
         mockMvc.perform(put("/api/students/{id}", studentId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -61,8 +64,8 @@ public class StudentControllerTest {
     @Test
     public void givenStudents_whenGetAllStudents_thenReturnStudentList() throws Exception {
         List<StudentDTO> students = Arrays.asList(
-                new StudentDTO("Gabriel", 20,"email@teste.com"),
-                new StudentDTO("Marcelo", 21, "email2@teste.com")
+                new StudentDTO("Gabriel", 20,"email@teste.com", Gender.MALE),
+                new StudentDTO("Marcelo", 21, "email2@teste.com", Gender.MALE)
         );
 
         when(studentService.getAllStudents()).thenReturn(students);
@@ -80,8 +83,8 @@ public class StudentControllerTest {
     public void givenValidCourseId_whenGetStudentsByCourse_thenReturnStudentList() throws Exception {
         Long courseId = 1L;
         List<StudentDTO> students = Arrays.asList(
-                new StudentDTO("Gabriel", 20, "email@teste.com"),
-                new StudentDTO("Marcelo", 21, "email2@teste.com")
+                new StudentDTO("Gabriel", 20, "email@teste.com", Gender.MALE),
+                new StudentDTO("Marcelo", 21, "email2@teste.com", Gender.MALE)
         );
 
         when(studentService.getStudentsByCourse(Mockito.eq(courseId))).thenReturn(students);

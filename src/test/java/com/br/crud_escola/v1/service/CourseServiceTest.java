@@ -4,6 +4,7 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.br.crud_escola.domain.dto.CourseDTO;
+import com.br.crud_escola.domain.dto.response.CourseResponseDTO;
 import com.br.crud_escola.domain.model.Course;
 import com.br.crud_escola.domain.mappers.CourseMapper;
 import com.br.crud_escola.domain.repository.CourseRepository;
@@ -61,7 +62,7 @@ class CourseServiceTest {
         when(courseRepository.save(course)).thenReturn(course);
         when(courseMapper.toDTO(course)).thenReturn(courseDTO);
 
-        CourseDTO createdCourse = courseService.createCourse(courseDTO);
+        CourseResponseDTO createdCourse = courseService.createCourse(courseDTO);
 
         assertNotNull(createdCourse);
         assertEquals("Math", createdCourse.name());
@@ -77,7 +78,7 @@ class CourseServiceTest {
         when(courseMapper.toDTO(any(Course.class))).thenReturn(updatedCourseDTO);
 
 
-        CourseDTO updatedCourse = courseService.updateCourse(1L, updatedCourseDTO);
+        CourseResponseDTO updatedCourse = courseService.updateCourse(1L, updatedCourseDTO);
 
         assertEquals("Math", updatedCourse.name());
         assertEquals("Updated Description", updatedCourse.description());

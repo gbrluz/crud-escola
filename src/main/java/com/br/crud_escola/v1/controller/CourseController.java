@@ -1,6 +1,7 @@
 package com.br.crud_escola.v1.controller;
 
 import com.br.crud_escola.domain.dto.CourseDTO;
+import com.br.crud_escola.domain.dto.response.CourseResponseDTO;
 import com.br.crud_escola.v1.service.CourseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -39,8 +40,8 @@ public class CourseController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content)
     })
-    public ResponseEntity<CourseDTO> createCourse(@RequestBody CourseDTO courseDTO) {
-        CourseDTO createdCourse = courseService.createCourse(courseDTO);
+    public ResponseEntity<CourseResponseDTO> createCourse(@RequestBody CourseDTO courseDTO) {
+        CourseResponseDTO createdCourse = courseService.createCourse(courseDTO);
         return ResponseEntity.ok(createdCourse);
     }
 
@@ -58,8 +59,8 @@ public class CourseController {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content)
     })
-    public ResponseEntity<CourseDTO> updateCourse(@PathVariable Long id, @RequestBody CourseDTO courseDTO) {
-        CourseDTO updatedCourse = courseService.updateCourse(id, courseDTO);
+    public ResponseEntity<CourseResponseDTO> updateCourse(@PathVariable Long id, @RequestBody CourseDTO courseDTO) {
+        CourseResponseDTO updatedCourse = courseService.updateCourse(id, courseDTO);
         return ResponseEntity.ok(updatedCourse);
     }
 

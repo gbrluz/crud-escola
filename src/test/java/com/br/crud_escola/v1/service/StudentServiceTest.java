@@ -1,6 +1,9 @@
 package com.br.crud_escola.v1.service;
 
 import com.br.crud_escola.domain.dto.StudentDTO;
+import com.br.crud_escola.domain.dto.StudentUpdateDTO;
+import com.br.crud_escola.domain.dto.response.StudentResponseDTO;
+import com.br.crud_escola.domain.enums.Gender;
 import com.br.crud_escola.domain.mappers.StudentMapper;
 import com.br.crud_escola.domain.model.Student;
 import com.br.crud_escola.domain.repository.StudentRepository;
@@ -41,7 +44,7 @@ class StudentServiceTest {
         student.setName("Gabriel");
         student.setAge(20);
 
-        studentDTO = new StudentDTO("Gabriel", 20, "email@teste.com");
+        studentDTO = new StudentDTO("Gabriel", 20, "email@teste.com", Gender.MALE);
     }
 
     @Test
@@ -62,7 +65,7 @@ class StudentServiceTest {
         when(studentRepository.save(student)).thenReturn(student);
         when(studentMapper.toDTO(student)).thenReturn(studentDTO);
 
-        StudentDTO createdStudent = studentService.createStudent(studentDTO);
+        StudentResponseDTO createdStudent = studentService.createStudent(studentDTO);
 
         assertNotNull(createdStudent);
         assertEquals("Gabriel", createdStudent.name());
@@ -83,14 +86,14 @@ class StudentServiceTest {
     @Test
     void testUpdateStudent() {
 
-        StudentDTO updatedStudentDTO = new StudentDTO("Gabriel", 21, "email@teste.com");
+        StudentUpdateDTO updatedStudentDTO = new StudentUpdateDTO("Gabriel", 21);
 
         when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
         when(studentRepository.save(any(Student.class))).thenReturn(student);
-        when(studentMapper.toDTO(student)).thenReturn(updatedStudentDTO);
+        when(studentMapper.updateEntityToDTO(student)).thenReturn(updatedStudentDTO);
 
 
-        StudentDTO updatedStudent = studentService.updateStudent(1L, updatedStudentDTO);
+        StudentResponseDTO updatedStudent = studentService.updateStudent(1L, updatedStudentDTO);
 
         assertEquals("Gabriel", updatedStudent.name());
         assertEquals(21, updatedStudent.age());
@@ -99,7 +102,7 @@ class StudentServiceTest {
 
     @Test
     void testUpdateStudentThrowsExceptionWhenEmailChanged() {
-        StudentDTO updatedStudentDTO = new StudentDTO("Gabriel", 21, "newemail@teste.com");
+        StudentUpdateDTO updatedStudentDTO = new StudentUpdateDTO("Gabriel", 21);
 
         when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
 
@@ -112,10 +115,12 @@ class StudentServiceTest {
 
     @Test
     void testUpdateStudentThrowsExceptionWhenStudentNotFound() {
+        StudentUpdateDTO updatedStudentDTO = new StudentUpdateDTO("Gabriel", 21);
+
         when(studentRepository.findById(1L)).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(EntityNotFoundException.class, () -> {
-            studentService.updateStudent(1L, studentDTO);
+            studentService.updateStudent(1L, updatedStudentDTO);
         });
 
         assertEquals("Student not found", exception.getMessage());
